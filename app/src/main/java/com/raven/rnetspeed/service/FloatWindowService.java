@@ -5,10 +5,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
@@ -17,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.raven.rnetspeed.R;
@@ -32,15 +35,17 @@ public class FloatWindowService extends Service {
 
     /* 一些辅助变量 */
     int save_interval = 1000 * 10;    /* 十分钟存储一次 */
-    int refresh_interval = 1000;     /* 1s更新ui一次 */
+    int refresh_interval = 2000;     /* 1s更新ui一次 */
     WindowManager wm;       /* 窗体管理器 */
     WindowManager.LayoutParams wlp;     /* 窗体参数 */
     String dev = null;      /* 当前上网设备 wifi?mobile */
     Handler taskHandler = new Handler();        /* 网速显示handler */
     NetSpeed mNetSpeed = new NetSpeed();
-    int uid = -1;
+//    int uid = -1;
     long[] currentSpeed;
 //    int view_half_width,view_half_height;
+    NetworkInfo mWifi;
+    NetworkInfo mMobile;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -50,7 +55,7 @@ public class FloatWindowService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        uid = getApplicationInfo().uid;     /* 当前进程id */
+//        uid = getApplicationInfo().uid;     /* 当前进程id */
         /* 注册上网状态广播 */
         /* 注册监听网络状态变化的广播 */
         IntentFilter mNetFilter = new IntentFilter();
@@ -61,6 +66,11 @@ public class FloatWindowService extends Service {
         initViews();
         /* 启动显示任务 */
         taskHandler.post(task);
+
+        ConnectivityManager connManager;
+        connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
     }
 
     /**
@@ -70,15 +80,19 @@ public class FloatWindowService extends Service {
         view = LayoutInflater.from(this).inflate(R.layout.floating_windows, null);
         download = view.findViewById(R.id.download);
         upload = view.findViewById(R.id.upload);
-
+        LinearLayout linearLayout = view.findViewById(R.id.text_wrapper);
         wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         wlp = new WindowManager.LayoutParams();
-        wlp.type = WindowManager.LayoutParams.TYPE_TOAST;
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.N){
+            wlp.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        }else{
+            wlp.type = WindowManager.LayoutParams.TYPE_TOAST;
+        }
         wlp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         wlp.gravity = Gravity.START | Gravity.TOP;
 //        wlp.format = PixelFormat.TRANSLUCENT;
-        wlp.x = 0;
-        wlp.y = 0;
+        wlp.x = 300;
+        wlp.y = 300;
 
         wlp.width = WindowManager.LayoutParams.WRAP_CONTENT;
         wlp.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -88,7 +102,7 @@ public class FloatWindowService extends Service {
 
         /* 显示 */
         wm.addView(view, wlp); /* 显示完成 */
-        Log.i(this.getPackageName(), "显示完成");
+        linearLayout.setBackgroundColor(Color.parseColor("#55000000"));
     }
 
 
@@ -98,7 +112,13 @@ public class FloatWindowService extends Service {
     Runnable task = new Runnable() {
         @Override
         public void run() {
-            currentSpeed = mNetSpeed.getNetSpeed(uid);
+            if(mWifi.isConnected()){
+                currentSpeed = mNetSpeed.getWifiNetSpeed();
+            }else if(mMobile.isConnected()){
+                currentSpeed = mNetSpeed.getMobileNetSpeed();
+            }else{
+                currentSpeed = new long[]{0,0};
+            }
             updateViewSpeed(currentSpeed[0], currentSpeed[1]);
             taskHandler.postDelayed(task, refresh_interval);     /* 又加入消息队列，这样可以反复处理这个任务 */
         }

@@ -90,7 +90,6 @@ public class MainFragment extends PreferenceFragment {
 
         /* 初始话msp */
         msp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
     }
 
     @Override
