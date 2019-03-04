@@ -88,9 +88,9 @@ public class FloatWindowService extends Service {
         }else{
             wlp.type = WindowManager.LayoutParams.TYPE_TOAST;
         }
-        wlp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        wlp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         wlp.gravity = Gravity.START | Gravity.TOP;
-//        wlp.format = PixelFormat.TRANSLUCENT;
+        wlp.format = PixelFormat.TRANSLUCENT;
         wlp.x = 300;
         wlp.y = 300;
 
@@ -102,7 +102,13 @@ public class FloatWindowService extends Service {
 
         /* 显示 */
         wm.addView(view, wlp); /* 显示完成 */
-        linearLayout.setBackgroundColor(Color.parseColor("#55000000"));
+        taskHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("Service","关闭");
+                wm.removeViewImmediate(view);
+            }
+        },5000);
     }
 
 
