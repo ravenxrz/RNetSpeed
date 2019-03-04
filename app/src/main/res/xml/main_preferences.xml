@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="网速悬浮窗">
+        <!-- 开关悬浮窗
+              默认：关闭
+         -->
+        <SwitchPreference
+            android:key="prf_window_state"
+            android:title="@string/netwindow_title"
+            android:summaryOn="@string/window_opened"
+            android:summaryOff="@string/window_closed"
+            android:defaultValue="false"
+           />
+        <!-- 监控网络状态选择
+             默认为：下行
+         -->
+        <ListPreference
+            android:key="prf_monitor_state"
+            android:title="@string/net_monitor_state"
+            android:entries="@array/net_monitor_state_entries"
+            android:entryValues="@array/net_monitor_state_entry_values"
+            android:defaultValue="@string/net_monitor_state_down_link"
+            />
+        <com.raven.rnetspeed.views.FontColorChooseDialog
+            android:key="prf_font_color"
+            android:title="@string/font_color_title"
+            />
+
+        <com.raven.rnetspeed.views.FontSizeChooseDialog
+            android:key="prf_font_size"
+            android:title="@string/font_size_title"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="扩展通能"
+        >
+        <Preference
+            android:key="net_statistics"
+            android:title="流量统计"
+            />
+        <Preference
+            android:key="net_speed_test"
+            android:title="网速测试"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="其它">
+
+        <com.raven.rnetspeed.views.AboutInfoDialog
+            android:title="@string/about_thanks"
+            android:key="thanks"
+            />
+
+        <com.raven.rnetspeed.views.AboutInfoDialog
+            android:title="@string/about_author"
+            android:key="about"
+            />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

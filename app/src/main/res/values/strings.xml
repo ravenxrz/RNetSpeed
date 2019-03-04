@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">RNetSpeed</string>
+
+    <string-array name="net_monitor_state_entries">
+        <item>仅下行</item>
+        <item>上行和上行</item>
+    </string-array>
+
+    <string-array name="net_monitor_state_entry_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="netwindow_title">开启网速悬浮窗</string>
+    <string name="window_opened">已开启</string>
+    <string name="window_closed">已关闭</string>
+    <string name="net_monitor_state">监控模式</string>
+    <string name="font_color_title">字体颜色</string>
+    <string name="font_size_title">字体大小</string>
+    <string name="net_monitor_state_down_link">1</string>
+    <string name="about_thanks">特别感谢</string>
+    <string name="about_author">关于作者</string>
+
+</resources>
