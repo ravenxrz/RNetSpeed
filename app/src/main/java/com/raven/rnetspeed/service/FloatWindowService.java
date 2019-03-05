@@ -237,6 +237,9 @@ public class FloatWindowService extends Service {
         unregisterReceiver(devChangeReceiver);
     }
 
-
+    public void setTextColor(int color){
+        upload.setTextColor(color );
+        download.setTextColor(color);
+    }
 
 }

@@ -21,5 +21,12 @@
     <string name="net_monitor_state_down_link">1</string>
     <string name="about_thanks">特别感谢</string>
     <string name="about_author">关于作者</string>
+    <string name="abount_production">关于作品</string>
+    <string name="about_author_text">Author:@Raven
+        \nGithub地址:https://github.com/ravenxrz/RNetSpeed
+        \n感谢以下开源库:
+        \nSmartColorView:https://github.com/SmartCodeLab/SmartColorView
+        \nxxxxx
+    </string>
 
 </resources>

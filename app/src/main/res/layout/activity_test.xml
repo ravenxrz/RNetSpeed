@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.raven.rnetspeed.views.ColorChooseView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/linearlayout"
-    android:orientation="vertical"
+    xmlns:circle="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".test.TestActivity">
+    android:layout_height="wrap_content"
+    tools:context=".TestActivity">
 
-</LinearLayout>
+
+
+</com.raven.rnetspeed.views.ColorChooseView>

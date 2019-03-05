@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.Preference;
@@ -12,6 +13,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.raven.rnetspeed.service.FloatWindowService;
@@ -33,8 +35,7 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
     private static final String FONT_SIZE = "prf_font_size";        /* 字体大小 */
     private static final String NET_STATISCICS = "net_statistics";     /* 流量统计 */
     private static final String NET_SPEED_TEST = "net_speed_test";      /* 网速测试 */
-    private static final String THANKS = "thanks";      /* 特别鸣谢 */
-    private static final String AUTHOR = "about";       /* 关于作者 */
+    private static final String ABOUNT = "about";       /* 关于 */
 
 
     /* 控件状态改变监听器 */
@@ -54,7 +55,9 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
             } else if (MONITOR_STATE.equals(key)) {
                 floatWindowService.setMonitorState(Integer.valueOf((String)newValue));
             } else if (FONT_COLOR.equals(key)) {
-
+                String color = (String) newValue;
+                Log.i("TAG",color);
+                floatWindowService.setTextColor(Color.parseColor(color));
             } else if (FONT_SIZE.equals(key)) {
 
             }
@@ -71,10 +74,8 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
                 myToast("流量统计");
             } else if (NET_SPEED_TEST.equals(key)) {
                 myToast("网速测试");
-            } else if (THANKS.equals(key)) {
-                myToast("特别感谢");
-            } else if (AUTHOR.equals(key)) {
-                myToast("作者信息");
+            } else if (ABOUNT.equals(key)) {
+                myToast("关于作品");
             }
             return true;
         }
@@ -132,8 +133,7 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
         /* 控件点击监听 */
         findPreference(NET_STATISCICS).setOnPreferenceClickListener(prfClickListener);
         findPreference(NET_SPEED_TEST).setOnPreferenceClickListener(prfClickListener);
-        findPreference(THANKS).setOnPreferenceClickListener(prfClickListener);
-        findPreference(AUTHOR).setOnPreferenceClickListener(prfClickListener);
+        findPreference(ABOUNT).setOnPreferenceClickListener(prfClickListener);
     }
 
 
@@ -158,10 +158,11 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
         boolean windowOpened = msp.getBoolean(WINDOWS_SATATE, false);
         /* 1 代表仅下行 */
         int monitorState = Integer.valueOf(msp.getString(MONITOR_STATE, "1"));
-        int fontColor = msp.getInt(FONT_COLOR, 0x000fff);
+        String fontColor = msp.getString(FONT_COLOR, "#FFFFFFFF");
         int fontSize = msp.getInt(FONT_SIZE, 100);
 
         floatWindowService.setWindowVisible(windowOpened);
         floatWindowService.setMonitorState(monitorState);
+        floatWindowService.setTextColor(Color.parseColor(fontColor));
     }
 }

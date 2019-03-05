@@ -24,6 +24,8 @@
             android:defaultValue="@string/net_monitor_state_down_link"
             />
         <com.raven.rnetspeed.views.FontColorChooseDialog
+            android:dialogTitle=""
+            android:dialogLayout="@layout/fontcolor_dialog_layout"
             android:key="prf_font_color"
             android:title="@string/font_color_title"
             />
@@ -46,20 +48,16 @@
             android:title="网速测试"
             />
     </PreferenceCategory>
-
     <PreferenceCategory
         android:title="其它">
 
         <com.raven.rnetspeed.views.AboutInfoDialog
-            android:title="@string/about_thanks"
-            android:key="thanks"
-            />
-
-        <com.raven.rnetspeed.views.AboutInfoDialog
-            android:title="@string/about_author"
+            android:negativeButtonText=""
+            android:dialogTitle=""
+            android:title="@string/abount_production"
             android:key="about"
+            android:dialogLayout="@layout/abount_dialog_layout"
             />
-
     </PreferenceCategory>
 
 </PreferenceScreen>
