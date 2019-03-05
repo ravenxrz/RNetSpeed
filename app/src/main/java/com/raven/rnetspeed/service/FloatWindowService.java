@@ -10,6 +10,7 @@ import android.graphics.PixelFormat;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -49,7 +50,16 @@ public class FloatWindowService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return new MyBinder();
+    }
+
+    /**
+     * 用于Service和Activity通信的辅助类
+     */
+    public class MyBinder extends android.os.Binder {
+        public FloatWindowService getService(){
+            return FloatWindowService.this;
+        }
     }
 
     @Override
@@ -101,14 +111,7 @@ public class FloatWindowService extends Service {
         view.setOnTouchListener(touchListener);
 
         /* 显示 */
-        wm.addView(view, wlp); /* 显示完成 */
-        taskHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Log.i("Service","关闭");
-                wm.removeViewImmediate(view);
-            }
-        },5000);
+        wm.addView(view,wlp);
     }
 
 
@@ -199,7 +202,7 @@ public class FloatWindowService extends Service {
      *
      * @param state 1： 仅下行， 2: 上下行
      */
-    private void setMonitorState(int state) {
+    public void setMonitorState(int state) {
         if (1 == state) {
             upload.setVisibility(View.GONE);
         } else if (2 == state) {
@@ -233,4 +236,7 @@ public class FloatWindowService extends Service {
         taskHandler.removeCallbacks(task);
         unregisterReceiver(devChangeReceiver);
     }
+
+
+
 }

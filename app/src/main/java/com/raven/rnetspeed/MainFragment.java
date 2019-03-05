@@ -1,8 +1,12 @@
 package com.raven.rnetspeed;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -13,10 +17,14 @@ import android.widget.Toast;
 import com.raven.rnetspeed.service.FloatWindowService;
 
 
-public class MainFragment extends PreferenceFragment {
+public class MainFragment extends PreferenceFragment implements ServiceConnection {
 
     /* sharedpreference 读取数据 */
     private SharedPreferences msp;
+
+    /* service对象，用于service与this的通信 */
+    private FloatWindowService floatWindowService;
+    private boolean bindSuccess;
 
     /* 控件key */
     private static final String WINDOWS_SATATE = "prf_window_state";    /* 悬浮窗开关状态 */
@@ -38,12 +46,13 @@ public class MainFragment extends PreferenceFragment {
                 boolean open = Boolean.valueOf((Boolean) newValue);
                 if(open){
                     /* 打开 */
-
+                    floatWindowService.setWindowVisible(true);
                 }else{
-
+                    /* 关闭 */
+                    floatWindowService.setWindowVisible(false);
                 }
             } else if (MONITOR_STATE.equals(key)) {
-
+                floatWindowService.setMonitorState(Integer.valueOf((String)newValue));
             } else if (FONT_COLOR.equals(key)) {
 
             } else if (FONT_SIZE.equals(key)) {
@@ -95,15 +104,19 @@ public class MainFragment extends PreferenceFragment {
     @Override
     public void onResume() {
         super.onResume();
-        /* 所有view操作初始完成后，开始做数据恢复操作 */
-        boolean windowOpened = msp.getBoolean(WINDOWS_SATATE, false);
-        /* 1 代表仅下行 */
-        int monitorState = Integer.valueOf(msp.getString(MONITOR_STATE, "1"));
-        int fontColor = msp.getInt(FONT_COLOR, 0x000fff);
-        int fontSize = msp.getInt(FONT_SIZE, 100);
         /* 启动流量悬浮窗口 */
         Intent service = new Intent(getActivity(),FloatWindowService.class);
-        getActivity().startService(service);
+        getActivity().bindService(service,this,Context.BIND_AUTO_CREATE);
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        /* 销毁资源 */
+        if(bindSuccess){
+            getActivity().unbindService(this);
+        }
 
     }
 
@@ -124,4 +137,31 @@ public class MainFragment extends PreferenceFragment {
     }
 
 
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        floatWindowService = ((FloatWindowService.MyBinder)service).getService();
+        if(null != floatWindowService){
+            Log.i(MainFragment.class.getSimpleName(),"service绑定成功");
+            bindSuccess = true;
+            /* bind成功后，初始化floatWindow的显示 */
+            initFloatWindowDisplay();
+        }
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+
+    }
+
+    private void initFloatWindowDisplay(){
+        /* 所有view操作初始完成后，开始做数据恢复操作 */
+        boolean windowOpened = msp.getBoolean(WINDOWS_SATATE, false);
+        /* 1 代表仅下行 */
+        int monitorState = Integer.valueOf(msp.getString(MONITOR_STATE, "1"));
+        int fontColor = msp.getInt(FONT_COLOR, 0x000fff);
+        int fontSize = msp.getInt(FONT_SIZE, 100);
+
+        floatWindowService.setWindowVisible(windowOpened);
+        floatWindowService.setMonitorState(monitorState);
+    }
 }
