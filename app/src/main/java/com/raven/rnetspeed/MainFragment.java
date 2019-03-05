@@ -85,6 +85,8 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
         Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
     }
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,25 +104,6 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
         msp = PreferenceManager.getDefaultSharedPreferences(getActivity());
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        /* 启动流量悬浮窗口 */
-        Intent service = new Intent(getActivity(),FloatWindowService.class);
-        getActivity().bindService(service,this,Context.BIND_AUTO_CREATE);
-
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        /* 销毁资源 */
-        if(bindSuccess){
-            getActivity().unbindService(this);
-        }
-
-    }
-
     /**
      * 初始化views
      */
@@ -136,6 +119,13 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
         findPreference(ABOUNT).setOnPreferenceClickListener(prfClickListener);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        /* 启动流量悬浮窗口 */
+        Intent service = new Intent(getActivity(),FloatWindowService.class);
+        getActivity().bindService(service,this,Context.BIND_AUTO_CREATE);
+    }
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
@@ -164,5 +154,15 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
         floatWindowService.setWindowVisible(windowOpened);
         floatWindowService.setMonitorState(monitorState);
         floatWindowService.setTextColor(Color.parseColor(fontColor));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        /* 销毁资源 */
+        if(bindSuccess){
+            getActivity().unbindService(this);
+        }
+
     }
 }

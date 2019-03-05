@@ -5,7 +5,5 @@
         <attr name="border_color" format="color" />
     </declare-styleable>
 
-    <declare-styleable name="ColorChooseView">
-        <attr name="default_position" format="integer"/>
-    </declare-styleable>
+
 </resources>

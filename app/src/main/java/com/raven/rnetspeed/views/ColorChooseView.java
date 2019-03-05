@@ -1,10 +1,8 @@
 package com.raven.rnetspeed.views;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -12,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.raven.rnetspeed.R;
 import com.raven.rnetspeed.util.DensityUtil;
@@ -23,18 +22,16 @@ import java.util.regex.Pattern;
 
 public class ColorChooseView extends LinearLayout {
 
-
     private static final String TAG = ColorChooseView.class.getSimpleName();
     /* 颜色圆圈内部颜色 */
     private String [] circleColorList = new String[]{"#FFF44336","#FFE91E63","#FF9C27B0","#FF673AB7",
-            "#FF2196F3","#FF795548","#FF9E9E9E","#FF607D8B"};
+            "#FF2196F3","#FF009688","#FF4CAF50","#FFFFEB3B"};
     /* 颜色圆圈外部line颜色 */
     private String [] outLineColorList = new String[]{"#FFe57373","#FFF06292","#FFBA68C8","#FF9575CD",
-            "#FF64B5F6","#FFA1887F","#FFE0E0E0","#FF90A4AE"};
+            "#FF64B5F6","#FF4DB6AC","#FF81C784","#FFFFF176"};
     /* 默认有多少个圆圈 */
     private static final int colorViewNum = 8;
     private CircleColorView [] circleColorViews;
-    private int default_pos = 0;
     private Context mContext;
 
     /* 当前选中颜色点position */
@@ -58,11 +55,6 @@ public class ColorChooseView extends LinearLayout {
             circleColorViews[i] = new CircleColorView(context);
         }
         mEdittext = new EditText(context);
-
-        /* init default pos */
-        TypedArray a = context.obtainStyledAttributes(attrs,R.styleable.ColorChooseView);
-        default_pos = a.getInteger(R.styleable.ColorChooseView_default_position,0) % colorViewNum;
-        a.recycle();
 
         initCircleColorOps();
 
@@ -107,33 +99,6 @@ public class ColorChooseView extends LinearLayout {
         }
     };
 
-    /**
-     * 设置view的margin
-     * @param v
-     * @param l
-     * @param t
-     * @param r
-     * @param b
-     */
-    private void setMargins (View v, int l, int t, int r, int b) {
-        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            p.setMargins(l, t, r, b);
-            v.requestLayout();
-        }
-    }
-
-    /**
-     * 设置view集合的margin
-     * @param v
-     */
-    private void setViewsMargin(View[] v){
-        int marginDp = DensityUtil.dip2px(mContext,8);
-        for (int i = 0; i < v.length; i++) {
-            setMargins(v[i],marginDp,marginDp,marginDp,marginDp);
-        }
-    }
-
 
     /**
      * 添加配置好的圆圈到当前view中
@@ -173,18 +138,33 @@ public class ColorChooseView extends LinearLayout {
 
         /* 重新更改margins */
         setViewsMargin(circleColorViews);
+    }
 
 
-        /* add success */
-        Log.i(ColorChooseView.class.getSimpleName(),"Add");
+    /**
+     * 设置view的margin
+     * @param v
+     * @param l
+     * @param t
+     * @param r
+     * @param b
+     */
+    private void setMargins (View v, int l, int t, int r, int b) {
+        if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            p.setMargins(l, t, r, b);
+            v.requestLayout();
+        }
     }
 
     /**
-     * 清除所有选中状态
+     * 设置view集合的margin
+     * @param v
      */
-    private void clearSelect(){
-        for(int i = 0;i<colorViewNum;i++){
-            circleColorViews[i].setCircleSelected(false);
+    private void setViewsMargin(View[] v){
+        int marginDp = DensityUtil.dip2px(mContext,8);
+        for (int i = 0; i < v.length; i++) {
+            setMargins(v[i],marginDp,marginDp,marginDp,marginDp);
         }
     }
 
@@ -196,7 +176,6 @@ public class ColorChooseView extends LinearLayout {
         clearSelect();
         if("".equals(color)){
             /* 默认为白色 */
-//            circleColorViews[default_pos].setCircleSelected(true);
         }else{
             for(int i = 0;i<colorViewNum;i++) {
                 if (color.equals(circleColorList[i])) {
@@ -209,15 +188,27 @@ public class ColorChooseView extends LinearLayout {
         }
     }
 
+    /**
+     * 清除所有选中状态
+     */
+    private void clearSelect(){
+        for(int i = 0;i<colorViewNum;i++){
+            circleColorViews[i].setCircleSelected(false);
+        }
+    }
+
    public String getColor(){
         String input = mEdittext.getText().toString();
         input = input.toUpperCase();
-        if(checkInputColor(input)){ /* 首先检查是否有用户输入正确的颜色 */
-            return"#ff"+input;
-        }else{
-            /* 输入不合法，返回当前选中颜色 */
-            return circleColorList[cur_pos];
+        if(!"".equals(input)){
+            if(checkInputColor(input)) { /* 首先检查是否有用户输入正确的颜色 */
+                return "#FF" + input;
+            }else {
+                Toast.makeText(mContext, mContext.getString(R.string.type_color_code_error), Toast.LENGTH_SHORT).show();
+            }
         }
+       /* 输入不合法，返回当前选中颜色 */
+       return circleColorList[cur_pos];
    }
 
     /**
@@ -226,19 +217,15 @@ public class ColorChooseView extends LinearLayout {
      * @return
      */
    private boolean checkInputColor(String color){
-        if("".equals(color)){
+        if(color.length() != 6){
             return false;
+        }
+        Pattern pattern = Pattern.compile("(\\d|[a-f]|[A-F])+");
+        Matcher matcher = pattern.matcher(color);
+        if(matcher.find() && matcher.group().length() == 6){
+            return true;
         }else{
-            if(color.length() != 6){
-                return false;
-            }
-            Pattern pattern = Pattern.compile("(\\d|[a-f]|[A-F])+");
-            Matcher matcher = pattern.matcher(color);
-            if(matcher.find() && matcher.group().length() == 6){
-                return true;
-            }else{
-                return false;
-            }
+            return false;
         }
    }
 

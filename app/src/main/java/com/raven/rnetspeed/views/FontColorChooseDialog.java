@@ -19,27 +19,8 @@ public class FontColorChooseDialog extends DialogPreference {
 
     private ColorChooseView colorChooseView;
 
-
-    public FontColorChooseDialog(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
-    public FontColorChooseDialog(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
     public FontColorChooseDialog(Context context, AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    public FontColorChooseDialog(Context context) {
-        super(context);
-    }
-
-
-    @Override
-    protected View onCreateDialogView() {
-        return super.onCreateDialogView();
     }
 
     @Override
