@@ -144,7 +144,7 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
         /* 1 代表仅下行 */
         int monitorState = Integer.valueOf(msp.getString(MONITOR_STATE, "1"));
         String fontColor = msp.getString(FONT_COLOR, "#FFFFFFFF");
-        int fontSize = msp.getInt(FONT_SIZE, DensityUtil.dip2px(getActivity(),5));
+        int fontSize = msp.getInt(FONT_SIZE, 5);
         /* 保存的是dp，这里需要转为px */
         fontSize = DensityUtil.dip2px(getActivity(),fontSize);
 
