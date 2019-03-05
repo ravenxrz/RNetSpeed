@@ -11,9 +11,7 @@ import android.os.IBinder;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.raven.rnetspeed.service.FloatWindowService;
@@ -21,8 +19,6 @@ import com.raven.rnetspeed.util.DensityUtil;
 
 
 public class MainFragment extends PreferenceFragment implements ServiceConnection {
-
-
     private static final String TAG = MainFragment.class.getSimpleName();
 
     /* sharedpreference 读取数据 */
@@ -37,7 +33,7 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
     private static final String MONITOR_STATE = "prf_monitor_state";    /* 监控模式 */
     private static final String FONT_COLOR = "prf_font_color";      /* 字体颜色 */
     private static final String FONT_SIZE = "prf_font_size";        /* 字体大小 */
-    private static final String NET_STATISCICS = "net_statistics";     /* 流量统计 */
+//    private static final String NET_STATISCICS = "net_statistics";     /* 流量统计 */
     private static final String NET_SPEED_TEST = "net_speed_test";      /* 网速测试 */
     private static final String ABOUNT = "about";       /* 关于 */
 
@@ -73,12 +69,8 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
         @Override
         public boolean onPreferenceClick(Preference preference) {
             String key = preference.getKey();
-            if (NET_STATISCICS.equals(key)) {
-                myToast("流量统计");
-            } else if (NET_SPEED_TEST.equals(key)) {
+           if (NET_SPEED_TEST.equals(key)) {
                 myToast("网速测试");
-            } else if (ABOUNT.equals(key)) {
-                myToast("关于作品");
             }
             return true;
         }
@@ -117,7 +109,7 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
         findPreference(FONT_COLOR).setOnPreferenceChangeListener(prfChangeListener);
         findPreference(FONT_SIZE).setOnPreferenceChangeListener(prfChangeListener);
         /* 控件点击监听 */
-        findPreference(NET_STATISCICS).setOnPreferenceClickListener(prfClickListener);
+//        findPreference(NET_STATISCICS).setOnPreferenceClickListener(prfClickListener);
         findPreference(NET_SPEED_TEST).setOnPreferenceClickListener(prfClickListener);
         findPreference(ABOUNT).setOnPreferenceClickListener(prfClickListener);
     }

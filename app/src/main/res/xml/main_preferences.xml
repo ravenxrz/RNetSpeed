@@ -42,10 +42,6 @@
         android:title="扩展通能"
         >
         <Preference
-            android:key="net_statistics"
-            android:title="流量统计"
-            />
-        <Preference
             android:key="net_speed_test"
             android:title="网速测试"
             />

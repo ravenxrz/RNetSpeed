@@ -1,16 +1,12 @@
 package com.raven.rnetspeed.service;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
-import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -20,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.raven.rnetspeed.R;
@@ -28,6 +23,8 @@ import com.raven.rnetspeed.model.NetSpeed;
 
 
 public class FloatWindowService extends Service {
+
+    private static final String TAG = FloatWindowService.class.getSimpleName();
 
     /* 上行下行控件 */
     TextView download;
@@ -39,7 +36,7 @@ public class FloatWindowService extends Service {
     int refresh_interval = 2000;     /* 1s更新ui一次 */
     WindowManager wm;       /* 窗体管理器 */
     WindowManager.LayoutParams wlp;     /* 窗体参数 */
-    String dev = null;      /* 当前上网设备 wifi?mobile */
+//    String dev = null;      /* 当前上网设备 wifi?mobile */
     Handler taskHandler = new Handler();        /* 网速显示handler */
     NetSpeed mNetSpeed = new NetSpeed();
 //    int uid = -1;
@@ -47,6 +44,9 @@ public class FloatWindowService extends Service {
 //    int view_half_width,view_half_height;
     NetworkInfo mWifi;
     NetworkInfo mMobile;
+    /* 记录最后移动坐标的sp */
+    SharedPreferences coodinatorSp;
+    int finalX,finalY;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -68,10 +68,12 @@ public class FloatWindowService extends Service {
 //        uid = getApplicationInfo().uid;     /* 当前进程id */
         /* 注册上网状态广播 */
         /* 注册监听网络状态变化的广播 */
-        IntentFilter mNetFilter = new IntentFilter();
-        mNetFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        mNetFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-        registerReceiver(devChangeReceiver, mNetFilter);
+//        IntentFilter mNetFilter = new IntentFilter();
+//        mNetFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+//        mNetFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+//        registerReceiver(devChangeReceiver, mNetFilter);
+        /* init sp */
+        coodinatorSp = getSharedPreferences("final coordinator",MODE_PRIVATE);
         /* 初始views*/
         initViews();
         /* 启动显示任务 */
@@ -90,7 +92,6 @@ public class FloatWindowService extends Service {
         view = LayoutInflater.from(this).inflate(R.layout.floating_windows, null);
         download = view.findViewById(R.id.download);
         upload = view.findViewById(R.id.upload);
-        LinearLayout linearLayout = view.findViewById(R.id.text_wrapper);
         wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         wlp = new WindowManager.LayoutParams();
         if(Build.VERSION.SDK_INT > Build.VERSION_CODES.N){
@@ -101,8 +102,13 @@ public class FloatWindowService extends Service {
         wlp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         wlp.gravity = Gravity.START | Gravity.TOP;
         wlp.format = PixelFormat.TRANSLUCENT;
-        wlp.x = 300;
-        wlp.y = 300;
+        /* 获取x，y的最终坐标 */
+        String coord = coodinatorSp.getString("coord","0,0");
+        Log.i(TAG,coord);
+        int x = Integer.parseInt(coord.split(",")[0]);
+        int y = Integer.parseInt(coord.split(",")[1]);
+        wlp.x = x;
+        wlp.y = y;
 
         wlp.width = WindowManager.LayoutParams.WRAP_CONTENT;
         wlp.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -157,12 +163,12 @@ public class FloatWindowService extends Service {
     /**
      * 网卡设备更改监听
      */
-    private BroadcastReceiver devChangeReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-        }
-    };
+//    private BroadcastReceiver devChangeReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//
+//        }
+//    };
 
 
     /**
@@ -172,8 +178,10 @@ public class FloatWindowService extends Service {
      * @param y
      */
     private void updateViewPos(float x, float y) {
-        wlp.x = (int) x - view.getMeasuredWidth()/2;
-        wlp.y = (int) y - view.getMeasuredHeight()/2;
+        finalX = (int) x;
+        finalY = (int) y;
+        wlp.x = finalX- view.getMeasuredWidth()/2;
+        wlp.y = finalY - view.getMeasuredHeight()/2;
         wm.updateViewLayout(view, wlp);
     }
 
@@ -245,7 +253,11 @@ public class FloatWindowService extends Service {
         /* 撤销相关资源 */
         wm.removeViewImmediate(view);
         taskHandler.removeCallbacks(task);
-        unregisterReceiver(devChangeReceiver);
+        /* 写入窗口的最后坐标 */
+        SharedPreferences.Editor editor = coodinatorSp.edit();
+        editor.putString("coord",finalX+","+finalY);
+        editor.commit();
+//        unregisterReceiver(devChangeReceiver);
     }
 
 
