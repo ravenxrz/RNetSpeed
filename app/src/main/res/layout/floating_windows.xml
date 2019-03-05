@@ -10,6 +10,7 @@
     android:padding="1dp">
 
     <TextView
+        android:textSize="14dp"
         android:id="@+id/upload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -17,6 +18,7 @@
         android:textColor="@color/white" />
 
     <TextView
+        android:textSize="14dp"
         android:id="@+id/download"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

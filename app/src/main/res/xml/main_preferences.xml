@@ -33,6 +33,8 @@
         <com.raven.rnetspeed.views.FontSizeChooseDialog
             android:key="prf_font_size"
             android:title="@string/font_size_title"
+            android:dialogLayout="@layout/fontsize_dialog_layout"
+            android:negativeButtonText=""
             />
     </PreferenceCategory>
 

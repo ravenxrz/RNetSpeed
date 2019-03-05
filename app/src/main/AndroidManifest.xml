@@ -26,9 +26,6 @@
 
         <service android:name=".service.FloatWindowService" />
 
-        <activity android:name=".TestActivity">
-
-        </activity>
     </application>
 
 </manifest>

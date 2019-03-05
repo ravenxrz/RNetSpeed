@@ -17,9 +17,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.raven.rnetspeed.service.FloatWindowService;
+import com.raven.rnetspeed.util.DensityUtil;
 
 
 public class MainFragment extends PreferenceFragment implements ServiceConnection {
+
+
+    private static final String TAG = MainFragment.class.getSimpleName();
 
     /* sharedpreference 读取数据 */
     private SharedPreferences msp;
@@ -56,10 +60,9 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
                 floatWindowService.setMonitorState(Integer.valueOf((String)newValue));
             } else if (FONT_COLOR.equals(key)) {
                 String color = (String) newValue;
-                Log.i("TAG",color);
                 floatWindowService.setTextColor(Color.parseColor(color));
             } else if (FONT_SIZE.equals(key)) {
-
+                floatWindowService.setTextSize((int)newValue);
             }
             return true;
         }
@@ -149,11 +152,14 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
         /* 1 代表仅下行 */
         int monitorState = Integer.valueOf(msp.getString(MONITOR_STATE, "1"));
         String fontColor = msp.getString(FONT_COLOR, "#FFFFFFFF");
-        int fontSize = msp.getInt(FONT_SIZE, 100);
+        int fontSize = msp.getInt(FONT_SIZE, DensityUtil.dip2px(getActivity(),5));
+        /* 保存的是dp，这里需要转为px */
+        fontSize = DensityUtil.dip2px(getActivity(),fontSize);
 
         floatWindowService.setWindowVisible(windowOpened);
         floatWindowService.setMonitorState(monitorState);
         floatWindowService.setTextColor(Color.parseColor(fontColor));
+        floatWindowService.setTextSize(fontSize);
     }
 
     @Override

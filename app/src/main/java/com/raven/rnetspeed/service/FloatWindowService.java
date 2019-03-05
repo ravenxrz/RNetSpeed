@@ -228,6 +228,17 @@ public class FloatWindowService extends Service {
         }
     }
 
+    public void setTextColor(int color){
+        upload.setTextColor(color );
+        download.setTextColor(color);
+    }
+
+    public void setTextSize(float size){
+        upload.setTextSize(size);
+        download.setTextSize(size);
+    }
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -237,9 +248,5 @@ public class FloatWindowService extends Service {
         unregisterReceiver(devChangeReceiver);
     }
 
-    public void setTextColor(int color){
-        upload.setTextColor(color );
-        download.setTextColor(color);
-    }
 
 }
