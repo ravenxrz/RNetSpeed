@@ -32,8 +32,8 @@ public class FloatWindowService extends Service {
     View view;  /* 总 view */
 
     /* 一些辅助变量 */
-    int save_interval = 1000 * 10;    /* 十分钟存储一次 */
-    int refresh_interval = 2000;     /* 1s更新ui一次 */
+//    int save_interval = 1000 * 10;    /* 十分钟存储一次 */
+    int refresh_interval = 1000;     /* 1s更新ui一次 */
     WindowManager wm;       /* 窗体管理器 */
     WindowManager.LayoutParams wlp;     /* 窗体参数 */
 //    String dev = null;      /* 当前上网设备 wifi?mobile */
@@ -221,16 +221,6 @@ public class FloatWindowService extends Service {
         }
     }
 
-    /**
-     * 存储从上次存储时间点到本次时间点的流量数据
-     *
-     * @param dev        设备，网卡（wifi，mobile)
-     * @param netTraffic 网络流量总量
-     */
-    private void saveData(String dev, float netTraffic) {
-
-    }
-
     public void setWindowVisible(boolean visible) {
         if (visible) {
             view.setVisibility(View.VISIBLE);
@@ -249,6 +239,9 @@ public class FloatWindowService extends Service {
         download.setTextSize(size);
     }
 
+    public void setRefreshInterval(int interval){
+        this.refresh_interval = interval;
+    }
 
     @Override
     public void onDestroy() {

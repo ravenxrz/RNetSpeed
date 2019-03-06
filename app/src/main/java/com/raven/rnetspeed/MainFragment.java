@@ -8,10 +8,14 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.text.InputType;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.raven.rnetspeed.service.FloatWindowService;
 import com.raven.rnetspeed.util.DensityUtil;
@@ -27,9 +31,13 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
     private FloatWindowService floatWindowService;
     private boolean bindSuccess;
 
+    private EditTextPreference editTextPreference;
+    private EditText refreshIntervalEdit;
+
     /* 控件key */
     private static final String WINDOWS_SATATE = "prf_window_state";    /* 悬浮窗开关状态 */
     private static final String MONITOR_STATE = "prf_monitor_state";    /* 监控模式 */
+    private static final String REFRESH_INTERVAL = "prf_refresh_interval";  /* 网速显示刷新间隔 */
     private static final String FONT_COLOR = "prf_font_color";      /* 字体颜色 */
     private static final String FONT_SIZE = "prf_font_size";        /* 字体大小 */
 //    private static final String NET_STATISCICS = "net_statistics";     /* 流量统计 */
@@ -58,22 +66,43 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
                 floatWindowService.setTextColor(Color.parseColor(color));
             } else if (FONT_SIZE.equals(key)) {
                 floatWindowService.setTextSize((int)newValue);
+            }else if(REFRESH_INTERVAL.equals(key)){
+                int value = Integer.valueOf((String) newValue);
+                if(checkRefreshIntervalLegal(value,true)){
+                    floatWindowService.setRefreshInterval(value);
+                }
             }
             return true;
         }
     };
 
-    /* 控件点击事件监听器 */
-    private Preference.OnPreferenceClickListener prfClickListener = new Preference.OnPreferenceClickListener() {
-        @Override
-        public boolean onPreferenceClick(Preference preference) {
-            String key = preference.getKey();
-           if (NET_SPEED_TEST.equals(key)) {
 
+    /**
+     * 检验新的刷新间隔是否符合要求
+     * @param value
+     * @param needPrompt 是否需要Toast提示
+     * @return
+     */
+    private boolean checkRefreshIntervalLegal(int value,boolean needPrompt){
+        if(value<= 0){
+            if(needPrompt){
+                Toast.makeText(getActivity(),"间隔不能小于0",Toast.LENGTH_SHORT).show();
             }
-            return true;
+            return false;
+        }else if(value <= 500){
+            if(needPrompt){
+                Toast.makeText(getActivity(),"间隔不能低于500ms，间隔过低会增大耗电量哦",Toast.LENGTH_SHORT).show();
+            }
+            return false;
+        }else if(value >= 10*1000){
+            if(needPrompt){
+                Toast.makeText(getActivity(),"间隔不能大于10s,间隔过大就不准确了呢了呢",Toast.LENGTH_SHORT).show();
+            }
+            return false;
+        }else{
+            return  true;
         }
-    };
+    }
 
 
 
@@ -104,10 +133,13 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
         findPreference(MONITOR_STATE).setOnPreferenceChangeListener(prfChangeListener);
         findPreference(FONT_COLOR).setOnPreferenceChangeListener(prfChangeListener);
         findPreference(FONT_SIZE).setOnPreferenceChangeListener(prfChangeListener);
-        /* 控件点击监听 */
-//        findPreference(NET_STATISCICS).setOnPreferenceClickListener(prfClickListener);
-        findPreference(NET_SPEED_TEST).setOnPreferenceClickListener(prfClickListener);
-        findPreference(ABOUNT).setOnPreferenceClickListener(prfClickListener);
+        findPreference(REFRESH_INTERVAL).setOnPreferenceChangeListener(prfChangeListener);
+        /* 限制只能输入数字 */
+        editTextPreference = ((EditTextPreference)findPreference(REFRESH_INTERVAL));
+        refreshIntervalEdit = editTextPreference.getEditText();
+        refreshIntervalEdit.setInputType(InputType.TYPE_CLASS_NUMBER);
+        refreshIntervalEdit.setHint("输入网速刷新间隔(单位ms)");
+
     }
 
     @Override
@@ -143,11 +175,21 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
         int fontSize = msp.getInt(FONT_SIZE, 5);
         /* 保存的是dp，这里需要转为px */
         fontSize = DensityUtil.dip2px(getActivity(),fontSize);
+        String intervalStr = msp.getString(REFRESH_INTERVAL,"1000");
+        int value = Integer.valueOf(intervalStr);
 
         floatWindowService.setWindowVisible(windowOpened);
         floatWindowService.setMonitorState(monitorState);
         floatWindowService.setTextColor(Color.parseColor(fontColor));
         floatWindowService.setTextSize(fontSize);
+        if(checkRefreshIntervalLegal(value,false)){
+            floatWindowService.setRefreshInterval(value);
+            editTextPreference.setText(value+"");
+        }else{
+            value = 1000;
+            floatWindowService.setRefreshInterval(value);
+            editTextPreference.setText(value+"");
+        }
     }
 
     @Override

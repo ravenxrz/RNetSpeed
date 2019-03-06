@@ -13,6 +13,11 @@
             android:summaryOff="@string/window_closed"
             android:defaultValue="false"
            />
+
+        <EditTextPreference
+            android:key="prf_refresh_interval"
+            android:title="@string/net_refresh_interval"
+            />
         <!-- 监控网络状态选择
              默认为：下行
          -->
@@ -23,6 +28,7 @@
             android:entryValues="@array/net_monitor_state_entry_values"
             android:defaultValue="@string/net_monitor_state_down_link"
             />
+
         <com.raven.rnetspeed.views.FontColorChooseDialog
             android:dialogTitle=""
             android:dialogLayout="@layout/fontcolor_dialog_layout"

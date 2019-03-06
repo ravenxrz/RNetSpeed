@@ -35,5 +35,6 @@
     <string name="type_color_code_error">您输入的颜色代码有误，请重新输入</string>
     <string name="net_speed_test__bt_placeholder_text">开始</string>
     <string name="download_speed_test">下载网速测试</string>
+    <string name="net_refresh_interval">网速刷新间隔</string>
 
 </resources>
