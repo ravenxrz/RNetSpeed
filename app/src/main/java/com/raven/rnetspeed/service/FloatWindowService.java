@@ -129,11 +129,11 @@ public class FloatWindowService extends Service {
             mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
             mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
             if(mWifi.isConnected()){
-                Log.i(TAG,"wifi connected");
+//                Log.i(TAG,"wifi connected");
                 currentSpeed = mNetSpeed.getWifiNetSpeed();
             }else if(mMobile.isConnected()){
                 currentSpeed = mNetSpeed.getMobileNetSpeed();
-                Log.i(TAG,"mobile connected");
+//                Log.i(TAG,"mobile connected");
             }else{
                 currentSpeed = new long[]{0,0};
             }

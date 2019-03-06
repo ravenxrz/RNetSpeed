@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:textColor="@android:color/black"
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,6 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:textColor="@android:color/black"
         android:id="@+id/current_speed_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,6 +29,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView1" />
 
     <TextView
+        android:textColor="@android:color/black"
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,6 +42,7 @@
         app:layout_constraintTop_toTopOf="@+id/textView1" />
 
     <TextView
+        android:textColor="@android:color/black"
         android:id="@+id/max_speed_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,6 +52,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
+        android:textColor="@android:color/black"
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,6 +65,7 @@
         app:layout_constraintTop_toTopOf="@+id/textView2" />
 
     <TextView
+        android:textColor="@android:color/black"
         android:id="@+id/averge_speed_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,14 +74,13 @@
         app:layout_constraintStart_toStartOf="@+id/textView3"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/speed_show"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="160dp"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="4dp"
-        android:background="#123456"
-        app:layout_constraintTop_toBottomOf="@+id/max_speed_tv"></LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/max_speed_tv"/>
 
     <Button
         android:textColor="@color/white"
@@ -85,12 +90,12 @@
         android:layout_marginBottom="8dp"
         android:id="@+id/speed_bt"
         android:layout_width="120dp"
-        android:layout_height="45dp"
+        android:layout_height="42dp"
         android:layout_marginStart="8dp"
         app:layout_constraintEnd_toStartOf="@+id/exit_bt"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/speed_show" />
 
     <Button
         android:textColor="@color/white"
@@ -98,7 +103,7 @@
         android:id="@+id/exit_bt"
         android:text="退出"
         android:layout_width="120dp"
-        android:layout_height="45dp"
+        android:layout_height="42dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/speed_bt"

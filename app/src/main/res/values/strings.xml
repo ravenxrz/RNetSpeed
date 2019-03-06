@@ -24,8 +24,13 @@
     <string name="abount_production">关于作品</string>
     <string name="about_author_text">Author:@Raven
         \nGithub地址:https://github.com/ravenxrz/RNetSpeed
+        \n
         \n感谢以下开源库:
         \nSmartColorView:https://github.com/SmartCodeLab/SmartColorView
+        \n
+        \nJSpeedTest:https://github.com/bertrandmartel/speed-test-lib
+        \n
+        \nMPAndroidChart:https://github.com/PhilJay/MPAndroidChart
     </string>
     <string name="type_color_code_error">您输入的颜色代码有误，请重新输入</string>
     <string name="net_speed_test__bt_placeholder_text">开始</string>
