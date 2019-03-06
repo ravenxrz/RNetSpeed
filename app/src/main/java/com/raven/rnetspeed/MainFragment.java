@@ -12,7 +12,6 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.raven.rnetspeed.service.FloatWindowService;
 import com.raven.rnetspeed.util.DensityUtil;
@@ -70,15 +69,12 @@ public class MainFragment extends PreferenceFragment implements ServiceConnectio
         public boolean onPreferenceClick(Preference preference) {
             String key = preference.getKey();
            if (NET_SPEED_TEST.equals(key)) {
-                myToast("网速测试");
+
             }
             return true;
         }
     };
 
-    private void myToast(String msg) {
-        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
-    }
 
 
 

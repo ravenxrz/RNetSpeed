@@ -39,11 +39,14 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="扩展通能"
-        >
-        <Preference
+        android:title="扩展通能">
+        <com.raven.rnetspeed.views.NetSpeedTestDialog
             android:key="net_speed_test"
-            android:title="网速测试"
+            android:title="@string/download_speed_test"
+            android:dialogLayout="@layout/net_speed_test_dialog"
+            android:dialogTitle=""
+            android:positiveButtonText=""
+            android:negativeButtonText=""
             />
     </PreferenceCategory>
     <PreferenceCategory
