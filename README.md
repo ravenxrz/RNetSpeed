@@ -30,7 +30,7 @@
 
 开发过程中，使用到的开源库:
 
-- [SmartColorView](:https://github.com/SmartCodeLab/SmartColorView)
+- [SmartColorView](https://github.com/SmartCodeLab/SmartColorView)
 - [JSpeedTest](https://github.com/bertrandmartel/speed-test-lib)
 - [MPAndroidChart](https://github.com/PhilJay/MPAndroidChart)
 
