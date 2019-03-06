@@ -47,6 +47,7 @@ public class FloatWindowService extends Service {
     /* 记录最后移动坐标的sp */
     SharedPreferences coodinatorSp;
     int finalX,finalY;
+    ConnectivityManager connManager;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -79,10 +80,8 @@ public class FloatWindowService extends Service {
         /* 启动显示任务 */
         taskHandler.post(task);
 
-        ConnectivityManager connManager;
         connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
     }
 
     /**
@@ -127,10 +126,14 @@ public class FloatWindowService extends Service {
     Runnable task = new Runnable() {
         @Override
         public void run() {
+            mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
             if(mWifi.isConnected()){
+                Log.i(TAG,"wifi connected");
                 currentSpeed = mNetSpeed.getWifiNetSpeed();
             }else if(mMobile.isConnected()){
                 currentSpeed = mNetSpeed.getMobileNetSpeed();
+                Log.i(TAG,"mobile connected");
             }else{
                 currentSpeed = new long[]{0,0};
             }
