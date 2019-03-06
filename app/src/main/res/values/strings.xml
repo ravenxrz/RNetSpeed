@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RNetSpeed</string>
+    <string name="app_name">网速工具</string>
 
     <string-array name="net_monitor_state_entries">
         <item>仅下行</item>

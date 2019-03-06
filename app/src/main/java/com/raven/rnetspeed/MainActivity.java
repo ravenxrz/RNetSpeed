@@ -39,6 +39,7 @@ public class MainActivity extends PreferenceActivity {
             if(Build.VERSION.SDK_INT>=23) {
                 //判断权限是否已经申请过了（加上这个判断，则使用的悬浮窗的时候；如果权限已经申请则不再跳转到权限开启界面）
                 if (!Settings.canDrawOverlays(this)){
+                    Toast.makeText(this,"请授予本应用悬浮窗权限",Toast.LENGTH_LONG).show();
                     //申请权限
                     Intent intent =new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                             Uri.parse("package:" + getPackageName()));

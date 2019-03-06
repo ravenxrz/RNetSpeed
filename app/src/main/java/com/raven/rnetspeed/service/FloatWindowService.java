@@ -93,10 +93,12 @@ public class FloatWindowService extends Service {
         upload = view.findViewById(R.id.upload);
         wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
         wlp = new WindowManager.LayoutParams();
-        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.N){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             wlp.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-        }else{
-            wlp.type = WindowManager.LayoutParams.TYPE_TOAST;
+        }else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            wlp.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        } else {
+            wlp.type = WindowManager.LayoutParams.TYPE_PHONE;
         }
         wlp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         wlp.gravity = Gravity.START | Gravity.TOP;
