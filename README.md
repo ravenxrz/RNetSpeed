@@ -36,7 +36,7 @@
 
 
 
-### LISCENSE
+### LICENSE
 
 ```
 MIT License
